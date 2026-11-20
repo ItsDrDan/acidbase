@@ -6,7 +6,9 @@ const svgNS='http://www.w3.org/2000/svg';
 function fitCanvas(cv,w,h){const dpr=window.devicePixelRatio||1,cw=cv.clientWidth||w,want=Math.round(cw*dpr);if(cv.width!==want){cv.width=want;cv.height=Math.round(want*h/w)}const ctx=cv.getContext('2d');ctx.setTransform(cv.width/w,0,0,cv.height/h,0,0);return ctx}
 const labFire=(L,ev)=>{try{L.onEvent&&L.onEvent(ev,L)}catch(e){}};
 /* fast taps: act on touch-down so quick repeated taps on iPhone are never merged into one (click still works for mouse/keyboard) */
-function fastTap(b,fn){let t=0;b.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||b.disabled)return;e.preventDefault();t=Date.now();fn()});b.addEventListener('click',()=>{if(Date.now()-t<800)return;fn()})}
+// Touch fires on pointerdown (fast repeated taps); each touch then cancels exactly one follow-up click,
+// however late it arrives (in a cross-origin iframe on a busy phone the click can lag past any fixed window).
+function fastTap(b,fn){let n=0,t=0;b.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||b.disabled)return;e.preventDefault();n++;t=Date.now();fn()});b.addEventListener('click',()=>{if(n>0&&Date.now()-t<8000){n--;return}n=0;fn()})}
 
 
 /* ---------- 1. Particle beaker: what does the substance look like in water? ---------- */
