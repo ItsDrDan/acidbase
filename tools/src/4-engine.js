@@ -19,14 +19,14 @@ const BADGES=[['first','🌱','First Answer','Answer a question',j=>j.correct>=1
  ['pairs','🔄','Proton Matchmaker','10 in Proton Pairs',j=>(j.modes.pairs||0)>=10],['titrate','⚗️','Faint Pink','5 in Titration Lab',j=>(j.modes.titrate||0)>=5],['buffer','🛡️','Buffer Guard','5 in Buffer Lab',j=>(j.modes.buffer||0)>=5],
  ['quiz','🎯','Skill Check Star','8+ on a Skill Check',j=>(j.bestQuiz||0)>=8],['all','🧭','Explorer','Every mode',j=>MODES.every(m=>j.modes[m.id])]];
 function renderJ(){const l=Math.floor(J.xp/100)+1,i=J.xp%100;$('jChip').textContent=`Level ${l} • ${J.xp} XP`;$('lvl').textContent='Level '+l;$('xpFill').style.width=i+'%';$('xpTxt').textContent=i+' / 100 XP';
- $('badges').innerHTML=BADGES.map(([id,em,t,d])=>`<div class="bdg ${J.badges[id]?'got':''}"><span class="em" aria-hidden="true">${em}</span><span><b>${t}</b>${d}</span></div>`).join('')}
+ $('badges').innerHTML=BADGES.map(([id,em,t,d])=>`<div class="bdg ${J.badges[id]?'got':''}"><img src="assets/ach-${id}.webp" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'em',textContent:'${em}'}))"><span><b>${t}</b>${d}</span></div>`).join('')}
 function checkBadges(){BADGES.forEach(([id,em,t,,ok])=>{if(!J.badges[id]&&ok(J)){J.badges[id]=1;toast('Badge earned: '+em+' '+t)}})}
 function award(assisted){const before=Math.floor(J.xp/100);if(assisted)J.xp+=2;else{J.xp+=10+Math.min(state.streak,5)*2;J.correct++;J.best=Math.max(J.best,state.streak);J.modes[state.mode]=(J.modes[state.mode]||0)+1}
  checkBadges();if(Math.floor(J.xp/100)>before)toast('Level up!');try{localStorage.setItem(JK,JSON.stringify(J))}catch(e){}renderJ()}
 function stats(){[['nCorrect',state.correct],['nStreak',state.streak],['nAssist',state.assist]].forEach(([id,v])=>{const e=$(id);if(e.textContent!==String(v)){e.textContent=v;const p=e.parentElement;p.classList.remove('pop');void p.offsetWidth;p.classList.add('pop')}})}
 function fb(k,h){$('fb').className='fb '+k;$('fb').innerHTML=h}
 function log(ok){if(state.logged)return;state.logged=true;try{window.ddTrack&&ddTrack({game:'acidbase',course:'3A',mode:MODES.find(m=>m.id===state.mode).title,topic:state.q.topic||state.q.video||'',correct:!!ok})}catch(e){}}
-function buildModes(){$('modes').innerHTML=MODES.map(m=>`<button type="button" class="mode ${m.id===state.mode?'on':''}" aria-pressed="${m.id===state.mode}" data-m="${m.id}" style="--mb:${m.mb};--ma:${m.ma}"><span class="ic" aria-hidden="true">${m.icon}</span><b>${m.title}</b><small>${m.short}</small></button>`).join('');
+function buildModes(){$('modes').innerHTML=MODES.map(m=>`<button type="button" class="mode ${m.id===state.mode?'on':''}" aria-pressed="${m.id===state.mode}" data-m="${m.id}" style="--mb:${m.mb};--ma:${m.ma}"><span class="ic art" aria-hidden="true"><img src="assets/mode-${m.id}.webp" alt="" onerror="this.parentNode.classList.remove('art');this.parentNode.textContent='${m.icon}'"></span><b>${m.title}</b><small>${m.short}</small></button>`).join('');
  $('modes').querySelectorAll('.mode').forEach(b=>b.onclick=()=>{state.mode=b.dataset.m;ui.mode=state.mode;saveUI();buildModes();next()})}
 /* labs: a fresh lab for every question, so each task starts from the same baseline */
 const labHost=document.createElement('div');

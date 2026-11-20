@@ -16,7 +16,7 @@ button,.opt,.chip,.mode,summary{-webkit-user-select:none;user-select:none;-webki
 .hero h1{margin:6px 0 4px;font-size:clamp(30px,4.2vw,46px);line-height:1.08;font-weight:900;letter-spacing:-.02em}
 .hero h1 .a{color:#e0675a}.hero h1 .b{background:linear-gradient(90deg,#d0709f,#2f8fd0);-webkit-background-clip:text;background-clip:text;color:transparent}
 .subtitle{margin:0;color:var(--muted);font-size:15.5px}
-.logo{width:112px;flex:0 0 112px}.logo svg{display:block;width:100%;height:auto}
+.logo{width:190px;flex:0 0 190px}
 details.howto{margin:10px 0;border:2px solid #9fb6e8;border-bottom-width:5px;border-radius:18px;background:linear-gradient(120deg,#f7f3ff,#eef7ff)}
 details.howto>summary{list-style:none;cursor:pointer;padding:12px 18px;font-weight:900;font-size:18px;min-height:48px;display:flex;justify-content:space-between;align-items:center}
 details.howto>summary::-webkit-details-marker{display:none}
@@ -27,6 +27,7 @@ details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
 .mode{cursor:pointer;text-align:left;border:2px solid var(--ma);border-bottom-width:5px;border-radius:16px;background:linear-gradient(145deg,#ffffffa6,var(--mb));padding:10px 12px;display:grid;grid-template-columns:52px 1fr;column-gap:10px;align-items:center;min-height:64px;box-shadow:0 4px 12px #2634400d;transition:transform .15s,box-shadow .15s}
 .mode:hover{transform:translateY(-3px);box-shadow:0 10px 20px #26344018}
 .mode.on{outline:3px solid var(--ma);outline-offset:3px}
+.mode .ic.art{background:none;padding:0}.mode .ic.art img{width:100%;height:100%;display:block}
 .mode .ic{grid-row:span 2;width:50px;height:50px;border-radius:12px;display:grid;place-items:center;background:var(--ma);color:#fff;font-size:24px}
 .mode b{font-size:17px;line-height:1.2}.mode small{font-size:12px;color:#4c5a65;font-weight:600}
 .main{display:grid;grid-template-columns:minmax(0,1fr) 330px;grid-template-areas:"card ref" "card jour" "card vid";gap:14px;align-items:start;margin-top:10px}
@@ -117,7 +118,7 @@ select.chip{padding-right:8px;max-width:100%}
 .xprow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-weight:800;font-size:14px}
 .track{height:12px;background:#ece5d6;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#f7b6d6,#7fb2f0);transition:width .3s}
 .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:10px}
-.bdg{border:2px dashed #c3ccd4;border-radius:12px;padding:7px 9px;font-size:12.5px;color:#4c5a65;background:#fff;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center}.bdg .em{font-size:26px;text-align:center;filter:grayscale(1) opacity(.5)}.bdg.got .em{filter:none}.bdg:not(.got) b:after{content:' (not yet)';font-weight:700;font-size:11px;color:#5c6a75}.bdg.got{border:2px solid #f0cf86;background:#fff8e6}.bdg b{display:block;font-size:13.5px}
+.bdg{border:2px dashed #c3ccd4;border-radius:12px;padding:7px 9px;font-size:12.5px;color:#4c5a65;background:#fff;display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:center}.bdg .em{font-size:26px;text-align:center;filter:grayscale(1) opacity(.5)}.bdg.got .em{filter:none}.bdg img{width:48px;height:48px;display:block;filter:grayscale(1) opacity(.45)}.bdg.got img{filter:none}.bdg:not(.got) b:after{content:' (not yet)';font-weight:700;font-size:11px;color:#5c6a75}.bdg.got{border:2px solid #f0cf86;background:#fff8e6}.bdg b{display:block;font-size:13.5px}
 .vidcard{background:linear-gradient(120deg,#fff7ef,#fdf0f4);border:1px solid #f1d9cf;border-radius:14px;padding:9px 12px;margin-bottom:10px}
 .vidcard small{display:block;font-size:11.5px;font-weight:900;text-transform:uppercase;color:#b4534a}
 .vwrap{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#222}.vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -125,7 +126,7 @@ select.chip{padding-right:8px;max-width:100%}
 .confetti{position:fixed;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall 3s linear forwards;z-index:40;pointer-events:none}@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
 .sr-only{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 @media(max-width:1000px){.main{grid-template-columns:1fr;grid-template-areas:"card" "ref" "jour" "vid"}}
-@media(max-width:700px){.app{padding:8px}.card{padding:12px}.hero{padding:12px 14px}.subtitle{display:none}.logo{width:64px;flex-basis:64px}.options{grid-template-columns:1fr}.stats{width:100%}.stat{flex:1}
+@media(max-width:700px){.app{padding:8px}.card{padding:12px}.hero{padding:12px 14px}.subtitle{display:none}.logo{width:104px;flex-basis:104px}.options{grid-template-columns:1fr}.stats{width:100%}.stat{flex:1}
  .btnrow{grid-template-columns:1fr 1fr}.btnrow .check{grid-column:1/-1}.toprow h2{font-size:23px}.prompt{font-size:17.5px}.lab{padding:7px}.rxn{font-size:17px}
  .chip{font-size:14px;padding:6px 9px}.modes{grid-template-columns:repeat(2,minmax(0,1fr))}.mode small{display:none}.mode{grid-template-columns:40px minmax(0,1fr);min-height:54px;min-width:0;padding:8px}.mode b{overflow-wrap:anywhere;font-size:15px}.mode .ic{width:40px;height:40px;font-size:20px}
  .phwrap,.titwrap{grid-template-columns:1fr}.phsvg{max-width:230px}.titsvg{max-width:170px}.seg button{padding:6px 8px;font-size:14px}.lbsp{min-width:100%}.cn b{font-size:16px}.bk svg{max-width:150px}}
@@ -143,11 +144,7 @@ select.chip{padding-right:8px;max-width:100%}
  <h1><span class="a">Proton</span> <span class="b">Swap!</span></h1>
  <p class="subtitle">Spot acids and bases, run the pH numbers, titrate to faint pink, and watch a buffer hold its ground.</p>
 </div>
-<div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#e4574e"/><stop offset=".3" stop-color="#f4a53b"/><stop offset=".5" stop-color="#5db85a"/><stop offset=".75" stop-color="#3b6fd0"/><stop offset="1" stop-color="#7a2f9a"/></linearGradient></defs>
- <circle cx="60" cy="60" r="56" fill="#fff" stroke="#f1d9e5" stroke-width="3"/><path d="M48 18h24v6h-3v24l22 38a8 8 0 0 1-7 12H36a8 8 0 0 1-7-12l22-38V24h-3z" fill="#fff" stroke="#22313b" stroke-width="4" stroke-linejoin="round"/>
- <path d="M40 66h40l13 22a6 6 0 0 1-5 9H32a6 6 0 0 1-5-9z" fill="url(#lg)"/><circle cx="50" cy="80" r="4" fill="#fff" opacity=".7"/><circle cx="68" cy="74" r="3" fill="#fff" opacity=".7"/>
- <g font-family="Inter,system-ui,sans-serif" font-weight="900"><circle cx="92" cy="30" r="15" fill="#f9c4bf" stroke="#e0675a" stroke-width="2.5"/><text x="92" y="36" text-anchor="middle" font-size="15" fill="#22313b">H⁺</text></g>
- <path d="M76 22c-6-6-14-6-18-2" fill="none" stroke="#e0675a" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)"/><defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e0675a"/></marker></defs></svg></div>
+<div class="logo" aria-hidden="true"><img src="assets/logo.webp" alt="" width="200" height="121" style="width:100%;height:auto;display:block"></div>
 </header>
 <main id="main">
 <details class="howto"><summary>📘 How to use this game</summary><ul>
@@ -805,14 +802,14 @@ const BADGES=[['first','🌱','First Answer','Answer a question',j=>j.correct>=1
  ['pairs','🔄','Proton Matchmaker','10 in Proton Pairs',j=>(j.modes.pairs||0)>=10],['titrate','⚗️','Faint Pink','5 in Titration Lab',j=>(j.modes.titrate||0)>=5],['buffer','🛡️','Buffer Guard','5 in Buffer Lab',j=>(j.modes.buffer||0)>=5],
  ['quiz','🎯','Skill Check Star','8+ on a Skill Check',j=>(j.bestQuiz||0)>=8],['all','🧭','Explorer','Every mode',j=>MODES.every(m=>j.modes[m.id])]];
 function renderJ(){const l=Math.floor(J.xp/100)+1,i=J.xp%100;$('jChip').textContent=`Level ${l} • ${J.xp} XP`;$('lvl').textContent='Level '+l;$('xpFill').style.width=i+'%';$('xpTxt').textContent=i+' / 100 XP';
- $('badges').innerHTML=BADGES.map(([id,em,t,d])=>`<div class="bdg ${J.badges[id]?'got':''}"><span class="em" aria-hidden="true">${em}</span><span><b>${t}</b>${d}</span></div>`).join('')}
+ $('badges').innerHTML=BADGES.map(([id,em,t,d])=>`<div class="bdg ${J.badges[id]?'got':''}"><img src="assets/ach-${id}.webp" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'em',textContent:'${em}'}))"><span><b>${t}</b>${d}</span></div>`).join('')}
 function checkBadges(){BADGES.forEach(([id,em,t,,ok])=>{if(!J.badges[id]&&ok(J)){J.badges[id]=1;toast('Badge earned: '+em+' '+t)}})}
 function award(assisted){const before=Math.floor(J.xp/100);if(assisted)J.xp+=2;else{J.xp+=10+Math.min(state.streak,5)*2;J.correct++;J.best=Math.max(J.best,state.streak);J.modes[state.mode]=(J.modes[state.mode]||0)+1}
  checkBadges();if(Math.floor(J.xp/100)>before)toast('Level up!');try{localStorage.setItem(JK,JSON.stringify(J))}catch(e){}renderJ()}
 function stats(){[['nCorrect',state.correct],['nStreak',state.streak],['nAssist',state.assist]].forEach(([id,v])=>{const e=$(id);if(e.textContent!==String(v)){e.textContent=v;const p=e.parentElement;p.classList.remove('pop');void p.offsetWidth;p.classList.add('pop')}})}
 function fb(k,h){$('fb').className='fb '+k;$('fb').innerHTML=h}
 function log(ok){if(state.logged)return;state.logged=true;try{window.ddTrack&&ddTrack({game:'acidbase',course:'3A',mode:MODES.find(m=>m.id===state.mode).title,topic:state.q.topic||state.q.video||'',correct:!!ok})}catch(e){}}
-function buildModes(){$('modes').innerHTML=MODES.map(m=>`<button type="button" class="mode ${m.id===state.mode?'on':''}" aria-pressed="${m.id===state.mode}" data-m="${m.id}" style="--mb:${m.mb};--ma:${m.ma}"><span class="ic" aria-hidden="true">${m.icon}</span><b>${m.title}</b><small>${m.short}</small></button>`).join('');
+function buildModes(){$('modes').innerHTML=MODES.map(m=>`<button type="button" class="mode ${m.id===state.mode?'on':''}" aria-pressed="${m.id===state.mode}" data-m="${m.id}" style="--mb:${m.mb};--ma:${m.ma}"><span class="ic art" aria-hidden="true"><img src="assets/mode-${m.id}.webp" alt="" onerror="this.parentNode.classList.remove('art');this.parentNode.textContent='${m.icon}'"></span><b>${m.title}</b><small>${m.short}</small></button>`).join('');
  $('modes').querySelectorAll('.mode').forEach(b=>b.onclick=()=>{state.mode=b.dataset.m;ui.mode=state.mode;saveUI();buildModes();next()})}
 /* labs: a fresh lab for every question, so each task starts from the same baseline */
 const labHost=document.createElement('div');
