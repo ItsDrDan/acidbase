@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proton Swap! • ItsDrDan • CHEM 3A</title>
+<meta name="description" content="Acids, bases, pH, conjugate pairs, titrations and buffers for CHEM 3A: a study game by ItsDrDan.">
+<style>
+:root{--ink:#22313b;--muted:#5c6a75;--line:#e4dfd3;--card:#fffefa;--blue:#4a9fd6}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);line-height:1.45;min-height:100vh;
+ background:radial-gradient(circle at 8% -5%,#ffe3ec 0,transparent 38%),radial-gradient(circle at 95% 5%,#dff0ff 0,transparent 34%),linear-gradient(120deg,#fff6f4,#fffaf2 50%,#f1f7ff);background-attachment:fixed}
+button,input,select{font:inherit;color:inherit}.hidden{display:none!important}
+button,.opt,.chip,.mode,summary{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+.app{max-width:1280px;margin:0 auto;padding:14px 14px 40px}
+.card{background:var(--card);border:1px solid #dfe8ef;border-radius:22px;box-shadow:0 8px 22px #2a5a7a10;padding:18px}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 26px;border-radius:24px;border:1px solid #d9e6f1;background:linear-gradient(115deg,#fff,#fff0f5 55%,#eef7ff);box-shadow:0 12px 30px #2a5a7a14}
+.badge{display:inline-block;background:#fff;border:1px solid #e3dccd;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:800}
+.hero h1{margin:6px 0 4px;font-size:clamp(30px,4.2vw,46px);line-height:1.08;font-weight:900;letter-spacing:-.02em}
+.hero h1 .a{color:#e0675a}.hero h1 .b{background:linear-gradient(90deg,#d0709f,#2f8fd0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{margin:0;color:var(--muted);font-size:15.5px}
+.logo{width:112px;flex:0 0 112px}.logo svg{display:block;width:100%;height:auto}
+details.howto{margin:10px 0;border:2px solid #9fb6e8;border-bottom-width:5px;border-radius:18px;background:linear-gradient(120deg,#f7f3ff,#eef7ff)}
+details.howto>summary{list-style:none;cursor:pointer;padding:12px 18px;font-weight:900;font-size:18px;min-height:48px;display:flex;justify-content:space-between;align-items:center}
+details.howto>summary::-webkit-details-marker{display:none}
+details.howto>summary:after{content:"Tap to open ▾";font-size:13px;color:#fff;background:#4a6fc4;padding:5px 12px;border-radius:999px}
+details.howto[open]>summary:after{content:"Hide ▴";background:none;color:#4a6fc4}
+details.howto ul{margin:0 18px 14px;padding-left:22px;line-height:1.6}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+.mode{cursor:pointer;text-align:left;border:2px solid var(--ma);border-bottom-width:5px;border-radius:16px;background:linear-gradient(145deg,#ffffffa6,var(--mb));padding:10px 12px;display:grid;grid-template-columns:52px 1fr;column-gap:10px;align-items:center;min-height:64px;box-shadow:0 4px 12px #2634400d;transition:transform .15s,box-shadow .15s}
+.mode:hover{transform:translateY(-3px);box-shadow:0 10px 20px #26344018}
+.mode.on{outline:3px solid var(--ma);outline-offset:3px}
+.mode .ic{grid-row:span 2;width:50px;height:50px;border-radius:12px;display:grid;place-items:center;background:var(--ma);color:#fff;font-size:24px}
+.mode b{font-size:17px;line-height:1.2}.mode small{font-size:12px;color:#4c5a65;font-weight:600}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 330px;grid-template-areas:"card ref" "card jour" "card vid";gap:14px;align-items:start;margin-top:10px}
+#practice{grid-area:card;position:relative;overflow:hidden}#refPanel{grid-area:ref}#journey{grid-area:jour}#videoPanel{grid-area:vid}
+#practice:before{content:'';position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#e0675a,#f7c968,#5db85a,#2f8fd0,#9a6fc0)}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.toprow h2{margin:0;font-size:27px;font-weight:900}
+.stats{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stat{display:inline-flex;flex-direction:column;align-items:center;min-width:76px;padding:5px 10px;border-radius:14px;line-height:1.05}
+.stat b{font-size:22px;font-weight:900}.stat small{font-size:11.5px;font-weight:800;color:#4c5a65}
+.s1{background:#e5f6ea}.s2{background:#fff1d1}.s3{background:#efe8fb}.pop b{animation:pop .45s}@keyframes pop{40%{transform:scale(1.35)}}
+.btn{border:0;border-radius:14px;padding:12px 18px;font-weight:900;font-size:17px;cursor:pointer;min-height:48px;transition:transform .08s}
+.btn:active:not(:disabled){transform:translateY(2px)}.btn:disabled{opacity:.55;cursor:default}
+.dark{background:linear-gradient(180deg,#2f4650,#22343c);color:#fff;box-shadow:0 4px 0 #142128}
+.check{background:linear-gradient(180deg,#5cb2e6,#3b8ccb);color:#fff;box-shadow:0 4px 0 #2d73a8}
+.hint{background:#fff3c9;border:2px solid #efd27a;box-shadow:0 3px 0 #e0bd55}
+.show{background:#efe8fb;border:2px solid #cdbbec;box-shadow:0 3px 0 #b49ddc}
+.prompt{font-size:20px;font-weight:800;margin:14px 0 8px}
+.numrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.num{flex:1;min-width:180px;min-height:54px;font-size:20px;font-weight:700;border:2px solid #9fb6c8;border-radius:14px;padding:8px 14px;background:#fff}
+.chip.ins{min-width:52px;font-size:17px;background:#eef6ff;border-color:#b9d3ea}
+.num:focus{outline:3px solid #4a9fd6;outline-offset:2px}.unit{font-size:18px;font-weight:800}
+.givens{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin-top:8px;font-size:17px;font-weight:700}
+.givens span{background:#f3f8fd;border:1px solid #d6e4ef;border-radius:10px;padding:3px 10px}
+#practice.quizmode .btnrow{grid-template-columns:1fr}#practice.quizmode #hintBtn,#practice.quizmode #showBtn{display:none}
+.qprog{display:flex;gap:4px;margin:10px 0 0}.qprog i{flex:1;height:8px;border-radius:99px;background:#e6e0d2}.qprog i.ok{background:#4fa36a}.qprog i.no{background:#d9776f}.qprog i.now{background:#4a9fd6}
+.qsum{text-align:center}.qsum .big{font-size:44px;font-weight:900;margin:6px 0}.qsum table{margin:10px auto;border-collapse:collapse;text-align:left;font-size:15.5px}.qsum td{padding:6px 10px;border-top:1px solid #eee}.qsum td:last-child{white-space:nowrap}#practice.quizdone .btnrow{display:none}
+.plan{display:grid;gap:8px;margin-top:10px;text-align:left}.plan .item{background:#fff8e6;border:1px solid #f0dfae;border-radius:12px;padding:10px 12px}.plan .btn{min-height:44px;font-size:15px;padding:8px 14px;margin:6px 8px 0 0}
+@media(max-width:1000px){.ddfb-float.eq-hide{opacity:0!important;pointer-events:none!important;transform:translateY(12px)!important}}
+.task{display:flex;gap:8px;align-items:center;background:#fff6e0;border:2px dashed #f0c45c;border-radius:14px;padding:8px 12px;font-weight:800;font-size:15.5px;margin:6px 0}
+.task.done{background:#e8f7ec;border:2px solid #8fcf9f}
+.qbox{background:radial-gradient(circle at 50% 0,#f7fbff,#fff 70%);border:2px solid #e1ebf3;border-radius:18px;padding:14px;margin:8px 0;font-size:18px}
+.rxn{font-size:21px;font-weight:800;text-align:center;letter-spacing:.01em}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border:2px solid #dcd6c8;border-bottom-width:4px;border-radius:16px;padding:10px 14px;min-height:56px;font-size:17px;font-weight:700;cursor:pointer}
+.opt .L{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#e6f2ff;color:#3b82b4;font-size:14px;font-weight:900}
+.opt.sel{border-color:var(--blue);background:#eaf5fd}.opt.sel .L{background:#4a9fd6;color:#fff}
+.opt.right{border-color:#4fa36a;background:#e8f7ec}.opt.right .L{background:#4fa36a;color:#fff}
+.opt.wrong{border-color:#d9776f;background:#fdeeed}.opt.wrong .L{background:#d9776f;color:#fff}
+.tip{font-size:13px;color:var(--muted);margin:4px 2px}
+.btnrow{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:10px;margin-top:14px}
+.hintbox{display:none;margin-top:10px;border-radius:14px;padding:10px 14px;border-left:7px solid #efc94c;background:linear-gradient(90deg,#fff5d2,#fffbec);font-weight:600}.hintbox.on{display:block}
+.fb{margin-top:10px;border-radius:14px;line-height:1.5}
+.fb.good{border-left:7px solid #4fa36a;background:linear-gradient(90deg,#e6f6ea,#f4fbf6);padding:12px 14px}
+.fb.bad{border-left:7px solid #d9776f;background:linear-gradient(90deg,#fdecea,#fff7f6);padding:12px 14px}
+.fb ul.why{margin:8px 0 0;padding-left:20px;font-size:15px}.fb ul.why li{margin:3px 0}
+.linkbtn{border:0;background:none;padding:0;color:#2f7fbf;font-weight:800;cursor:pointer;text-decoration:underline}
+/* labs */
+.lab{border:2px solid #d6e4ef;border-radius:18px;background:#fbfdff;padding:10px;margin:8px 0}
+.lab .eqrow{text-align:center;font-weight:800;font-size:16px;margin:2px 0 8px}
+.lab .real{text-align:center;font-size:13.5px;font-weight:700;color:#5c4a1e;background:#fff8e6;border:1px solid #f0dfae;border-radius:10px;padding:4px 10px;margin:0 auto 8px;max-width:640px}
+.ctrls{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:8px}
+.chip{min-height:44px;padding:6px 12px;border-radius:12px;border:2px solid #c9d8e4;border-bottom-width:4px;background:#fff;font-weight:800;font-size:15px;cursor:pointer}
+.chip:active{transform:translateY(2px)}.chip.on{background:#2f4650;color:#fff;border-color:#22343c}.chip:disabled{opacity:.45}
+.chip.go{background:#fff8e6;border-color:#f0cf86}.chip.rst{background:#f3f6f9;font-size:13.5px}
+.chip.spd{background:#eef6ff;border-color:#b9d3ea;min-width:160px;text-align:left}
+select.chip{padding-right:8px;max-width:100%}
+.seg{display:inline-flex;border:2px solid #c9d8e4;border-radius:12px;overflow:hidden;flex-wrap:wrap}.seg button{min-height:44px;padding:6px 11px;border:0;background:#fff;font-weight:800;font-size:15px;cursor:pointer;color:#22313b}
+.seg button+button{border-left:2px solid #c9d8e4}.seg button[aria-pressed=true]{background:#2f4650;color:#fff}
+.slider{display:flex;align-items:center;gap:8px;flex:1 1 230px;min-height:48px;background:#fff;border:2px solid #dbe5ee;border-radius:12px;padding:4px 10px;font-weight:900;font-size:16px}
+.slider input{flex:1;min-width:90px;height:36px;accent-color:#d0709f}.slider output{min-width:52px;text-align:right}
+.stage{position:relative}.stage canvas{display:block;width:100%;height:auto;border-radius:12px;background:#fff;border:2px solid #dbe5ee}
+.bulb{position:absolute;right:10px;top:8px;width:46px;height:auto;pointer-events:none}
+.status{font-weight:900;font-size:14.5px;border-radius:10px;padding:6px 9px;margin-top:6px}
+.status.eq{background:#e6f6ea;color:#2f6e3f}.status.r{background:#e6f2ff;color:#245c86}.status.l{background:#fff0e3;color:#94531a}
+.kline{font-size:13px;color:var(--muted);font-weight:700}
+.cap{font-size:12.5px;color:var(--muted);font-weight:700;margin:5px 2px 0}
+.phwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center}
+.phsvg{width:100%;max-width:300px;height:auto;display:block;margin:0 auto}
+.corners{display:grid;grid-template-columns:1fr 1fr;gap:6px}.corners .status,.corners .kline{grid-column:1/-1}
+.cn{background:#fff;border:1px solid #e3eaf0;border-radius:12px;padding:5px 9px}.cn small{display:block;font-size:11.5px;font-weight:800;color:#5c6a75}.cn b{font-size:18px}
+.titwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:10px;align-items:center}.titsvg{width:100%;max-width:240px;height:auto;display:block;margin:0 auto}
+.titread{display:grid;grid-template-columns:1fr 1fr;gap:6px}.titread .kline,.titread .bars,.titread .status{grid-column:1/-1}
+.bars{display:grid;grid-template-columns:auto 1fr 46px;gap:4px 8px;align-items:center;font-size:13px;font-weight:800}.bars i{height:12px;background:#ece5d6;border-radius:99px;overflow:hidden}.bars u{display:block;height:100%;width:0;background:#e0675a;transition:width .25s}.bars i:nth-of-type(2) u{background:#3b8ccb}.bars b{text-align:right}
+.graphwrap{margin-top:8px}.graphwrap canvas{display:block;width:100%;height:auto;background:#fff;border:1px solid #e3eaf0;border-radius:12px}
+.bufwrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bk{text-align:center;background:#fff;border:1px solid #e3eaf0;border-radius:14px;padding:6px}.bk svg{width:100%;max-width:200px;height:auto}.bkt{font-weight:900}
+.tokens{display:grid;gap:4px;margin-top:8px;font-size:14px}.tokens div{background:#fff;border:1px solid #e3eaf0;border-radius:10px;padding:4px 10px;overflow-wrap:anywhere}.tokens span{letter-spacing:2px;color:#6b4fa6}
+.mini4{display:grid;grid-template-columns:auto auto auto;gap:2px 10px;justify-content:center;align-items:center;font-size:14px;font-weight:800;color:#4c5a65;margin-top:8px}.mini4 span{text-align:center}
+.lbrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:7px 6px;border-top:1px solid #eef2f5}.lbrow.bad{background:#fdeeed;border-radius:10px}.lbrow.ok{background:#e8f7ec;border-radius:10px}
+.lbsp{min-width:110px;font-weight:900;font-size:19px}.lb.locked button{pointer-events:none}
+/* side */
+.side{padding:0}.side>summary{cursor:pointer;list-style:none;padding:12px 16px;font-weight:900;font-size:17px;min-height:48px;display:flex;align-items:center;gap:8px;border-radius:22px}
+.side>summary::-webkit-details-marker{display:none}.side>summary:after{content:'▸';margin-left:auto;transition:transform .15s}.side[open]>summary:after{transform:rotate(90deg)}
+.side>.body{padding:6px 16px 14px}
+#refPanel>summary{background:linear-gradient(120deg,#f2ecff,#eaf5ff)}#videoPanel>summary{background:linear-gradient(120deg,#fff1e6,#fdeef2)}#journey>summary{background:linear-gradient(120deg,#fff8e6,#eef6ff)}
+.refcard{background:#fff;border:1px solid #e6e0d2;border-left:5px solid #d0709f;border-radius:12px;padding:7px 10px;font-size:13.5px;margin-bottom:7px}
+.refcard table{border-collapse:collapse;width:100%}.refcard td{padding:2px 4px;border-top:1px solid #eee;vertical-align:top}
+.xprow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-weight:800;font-size:14px}
+.track{height:12px;background:#ece5d6;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#f7b6d6,#7fb2f0);transition:width .3s}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:10px}
+.bdg{border:2px dashed #c3ccd4;border-radius:12px;padding:7px 9px;font-size:12.5px;color:#4c5a65;background:#fff;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center}.bdg .em{font-size:26px;text-align:center;filter:grayscale(1) opacity(.5)}.bdg.got .em{filter:none}.bdg:not(.got) b:after{content:' (not yet)';font-weight:700;font-size:11px;color:#5c6a75}.bdg.got{border:2px solid #f0cf86;background:#fff8e6}.bdg b{display:block;font-size:13.5px}
+.vidcard{background:linear-gradient(120deg,#fff7ef,#fdf0f4);border:1px solid #f1d9cf;border-radius:14px;padding:9px 12px;margin-bottom:10px}
+.vidcard small{display:block;font-size:11.5px;font-weight:900;text-transform:uppercase;color:#b4534a}
+.vwrap{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#222}.vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,30px);opacity:0;background:#fff8e6;border:3px solid #f0cf86;border-radius:16px;padding:12px 18px;font-weight:800;pointer-events:none;transition:.3s;z-index:50}.toast.on{opacity:1;transform:translate(-50%,0)}
+.confetti{position:fixed;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall 3s linear forwards;z-index:40;pointer-events:none}@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+.sr-only{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+@media(max-width:1000px){.main{grid-template-columns:1fr;grid-template-areas:"card" "ref" "jour" "vid"}}
+@media(max-width:700px){.app{padding:8px}.card{padding:12px}.hero{padding:12px 14px}.subtitle{display:none}.logo{width:64px;flex-basis:64px}.options{grid-template-columns:1fr}.stats{width:100%}.stat{flex:1}
+ .btnrow{grid-template-columns:1fr 1fr}.btnrow .check{grid-column:1/-1}.toprow h2{font-size:23px}.prompt{font-size:17.5px}.lab{padding:7px}.rxn{font-size:17px}
+ .chip{font-size:14px;padding:6px 9px}.modes{grid-template-columns:repeat(2,minmax(0,1fr))}.mode small{display:none}.mode{grid-template-columns:40px minmax(0,1fr);min-height:54px;min-width:0;padding:8px}.mode b{overflow-wrap:anywhere;font-size:15px}.mode .ic{width:40px;height:40px;font-size:20px}
+ .phwrap,.titwrap{grid-template-columns:1fr}.phsvg{max-width:230px}.titsvg{max-width:170px}.seg button{padding:6px 8px;font-size:14px}.lbsp{min-width:100%}.cn b{font-size:16px}.bk svg{max-width:150px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="https://itsdrdan.github.io/games/brand/itsdrdan.css">
+<script src="https://itsdrdan.github.io/games/brand/chemparse.v2.js"></script><!-- shared number reading (never edited; a change is a new version) -->
+<script src="https://itsdrdan.github.io/games/track.js" defer></script>
+<script src="https://itsdrdan.github.io/games/brand/embed.js" defer></script>
+</head><body>
+<div class="toast" id="toast" role="status"></div>
+<div class="app">
+<header class="hero"><div>
+ <span class="badge">🧪 Acids &amp; Bases • ItsDrDan • CHEM 3A</span>
+ <h1><span class="a">Proton</span> <span class="b">Swap!</span></h1>
+ <p class="subtitle">Spot acids and bases, run the pH numbers, titrate to faint pink, and watch a buffer hold its ground.</p>
+</div>
+<div class="logo" aria-hidden="true"><svg viewBox="0 0 120 120"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#e4574e"/><stop offset=".3" stop-color="#f4a53b"/><stop offset=".5" stop-color="#5db85a"/><stop offset=".75" stop-color="#3b6fd0"/><stop offset="1" stop-color="#7a2f9a"/></linearGradient></defs>
+ <circle cx="60" cy="60" r="56" fill="#fff" stroke="#f1d9e5" stroke-width="3"/><path d="M48 18h24v6h-3v24l22 38a8 8 0 0 1-7 12H36a8 8 0 0 1-7-12l22-38V24h-3z" fill="#fff" stroke="#22313b" stroke-width="4" stroke-linejoin="round"/>
+ <path d="M40 66h40l13 22a6 6 0 0 1-5 9H32a6 6 0 0 1-5-9z" fill="url(#lg)"/><circle cx="50" cy="80" r="4" fill="#fff" opacity=".7"/><circle cx="68" cy="74" r="3" fill="#fff" opacity=".7"/>
+ <g font-family="Inter,system-ui,sans-serif" font-weight="900"><circle cx="92" cy="30" r="15" fill="#f9c4bf" stroke="#e0675a" stroke-width="2.5"/><text x="92" y="36" text-anchor="middle" font-size="15" fill="#22313b">H⁺</text></g>
+ <path d="M76 22c-6-6-14-6-18-2" fill="none" stroke="#e0675a" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)"/><defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e0675a"/></marker></defs></svg></div>
+</header>
+<main id="main">
+<details class="howto"><summary>📘 How to use this game</summary><ul>
+ <li><b>Pick a mode</b> below. Start with 🔍 Acid or Base?, then try the labs.</li>
+ <li>Gold boxes say <b>👉 what to do in the lab</b>. Do it, then answer.</li>
+ <li>Typed answers: pH gets as many <b>decimal places</b> as the concentration has sig figs. Type 2.4E-5 for 2.4 × 10⁻⁵.</li>
+ <li><b>💡 Hint</b> gives a clue. <b>👀 Show Answer</b> reveals it but earns no point. <b>🎯 Skill Check</b> ends with a study plan.</li></ul></details>
+<nav class="modes" id="modes" aria-label="Choose a mode"></nav>
+<div class="main">
+<section class="card" id="practice">
+ <div class="toprow"><h2 id="modeTitle">Mode</h2><div class="stats">
+  <span class="stat s1"><b id="nCorrect">0</b><small>✅ Correct</small></span><span class="stat s2"><b id="nStreak">0</b><small>🔥 Streak</small></span><span class="stat s3"><b id="nAssist">0</b><small>👀 Assisted</small></span>
+  <button class="btn dark" id="newBtn">New Question ↻</button></div></div>
+ <div id="qArea"></div>
+ <div class="btnrow"><button class="btn check" id="checkBtn">Check Answer</button><button class="btn hint" id="hintBtn">💡 Hint</button><button class="btn show" id="showBtn">👀 Show Answer</button></div>
+ <div class="hintbox" id="hintBox"></div><div class="fb" id="fb" role="status" aria-live="polite"></div>
+</section>
+<details class="card side" id="refPanel"><summary>🧠 Reference</summary><div class="body" id="refBody"></div></details>
+<details class="card side" id="journey"><summary>🧭 Chemistry Journey <span class="badge" id="jChip" style="margin-left:auto;margin-right:6px">Level 1</span></summary><div class="body">
+ <div class="xprow"><span id="lvl">Level 1</span><div class="track"><div class="fill" id="xpFill"></div></div><span id="xpTxt">0 / 100 XP</span></div>
+ <div class="badges" id="badges"></div><button class="btn" id="resetBtn" style="margin-top:10px;font-size:14px;min-height:40px;background:#fff;border:2px solid #d5dce2">Reset progress</button></div></details>
+<details class="card side" id="videoPanel"><summary>🎥 Learn with Dr. Dan</summary><div class="body"><div class="vidcard" id="vidCard"></div><div class="vwrap"><iframe id="player" title="Dr. Dan video" loading="lazy" allow="encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe></div></div></details>
+</div></main></div>
+<!--@SCRIPTS@-->
+</body></html>

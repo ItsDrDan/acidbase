@@ -1,0 +1,19 @@
+# Proton Swap! (CHEM 3A Chapter 12: Acids and Bases)
+
+Study game for CHEM 3A, built from Dr. Dan's Lecture 26 (Acids and Bases) and Lecture 27 (Titrations) slides and checked against the Chapter 12 homework topics. Live at https://itsdrdan.github.io/acidbase/
+
+- `index.html`: the whole game (standalone). Loads the brand kit (`games/brand/itsdrdan.css`, `embed.js`), `games/brand/chemparse.v2.js` (shared number reading) and `games/track.js` (anonymous stats, game id `acidbase`).
+- Modes:
+  - 🔍 **Acid or Base?**: classify strong/weak acid/base/neither, acid and base families (binary, oxyacid, carboxylic; OH⁻, CO₃²⁻, amine), pick the strong one, [H₃O⁺]/[OH⁻] in a solution, properties and drug molecules, plus a **particle beaker** with a conductivity bulb (strong = all ions and a bright bulb, weak = mostly whole molecules and a dim bulb).
+  - 🌈 **pH Lab**: pH slider, ten household solutions, litmus / phenolphthalein / universal indicator, live four corners (pH, pOH, [H⁺], [OH⁻]), H₃O⁺/OH⁻ dots. Lab questions make students set a pH or pick a solution first.
+  - 🧮 **pH Calculator**: typed answers for pH, pOH, [H⁺], [OH⁻], Kw, strong acids, strong bases (incl. 2 OH⁻ from Ba(OH)₂), and blood acidosis/alkalosis. The log rule is graded (decimal places = sig figs), with mistake-specific feedback (dropped minus sign, pOH instead of pH, ln, missing ×2).
+  - 🔄 **Proton Pairs**: Arrhenius dissociation equations, which definitions fit (Arrhenius/Brønsted–Lowry/salt/molecular), tap-to-label acid/base/conjugate acid/conjugate base, conjugate formulas, conjugate-pair spotting, amphoteric water.
+  - ⚗️ **Titration Lab**: buret (+5, +1, +0.1 mL, 1 drop), phenolphthalein flask (a pink swirl that fades warns you are close; dark pink means overshoot), pH meter, mmol bars, live titration curve. The student titrates, then calculates molarity from their own buret reading. Also typed titration math (incl. H₂SO₄ and Ba(OH)₂ ratios and grams of an antacid), balanced neutralization equations, metal + acid, carbonate + acid.
+  - 🛡️ **Buffer Lab**: plain water next to a buffer (acetate, phosphate, ammonia, blood H₂CO₃/HCO₃⁻); add HCl/NaOH and watch water swing while the buffer holds, then run it past its capacity. Also "which pair makes a buffer" and concept questions.
+  - 🎯 **Skill Check**: 10 one-try questions across 10 topics, then a study plan with Practice and video buttons.
+- Every multiple-choice question explains the right answer and each wrong choice. Hints link to Dr. Dan's videos at the matching moment (timestamps found in `games/data/transcripts.json`).
+- Deep links: `?mode=id|ph|calc|pairs|titrate|buffer|quiz`.
+- Source: edit `tools/src/0-page.html` (page and styles), `1-data.js` (chemistry data, pH math), `2-labs.js` (the four labs), `3-questions.js` (question generators), `4-engine.js` (practice card, XP, badges, Skill Check), then `node tools/build.js` to rebuild `index.html`.
+- Tests: `node tools/check.js` (~746,000 checks: every generator, typed-answer display, slide examples such as lemon juice pH 2.30, pOH 9.38, blood 7.300, HCl 0.400 M, H₂SO₄ 0.300 M; conjugate ladders and reaction balance; drop-by-drop titrations reach faint pink within 0.15 mL of equivalence; buffers hold and then run out) and `node tools/lengths.js` (how often the right answer is the longest choice).
+
+Game design and chemistry by ItsDrDan. Code written with AI assistance (Claude) and checked by the author. © ItsDrDan, all rights reserved.
