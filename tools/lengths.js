@@ -1,6 +1,6 @@
 /* node tools/lengths.js : how often the right answer is the single longest choice (target: about 25% or less) */
 const fs=require('fs'),path=require('path'),S=path.join(__dirname,'src');global.window={};global.state={quiz:{plan:[],i:0}};
-(0,eval)(['1-data.js','2-labs.js','3-questions.js'].map(f=>fs.readFileSync(path.join(S,f),'utf8')).join('\n;\n').replace(/^const (\w+)=/gm,'var $1=').replace(/^function (\w+)/gm,'var $1=globalThis.$1=function $1'));
+(0,eval)(['1-data.js','2-labs.js','3-questions.js','3b-more.js'].map(f=>fs.readFileSync(path.join(S,f),'utf8')).join('\n;\n').replace(/^const (\w+)=/gm,'var $1=').replace(/^function (\w+)/gm,'var $1=globalThis.$1=function $1'));
 const strip=s=>s.replace(/<[^>]+>/g,'').length;
 const G={id:idQ,ph:phQ,calc:calcModeQ,pairs:pairsQ,titrate:titrateQ,buffer:bufferQ};
 for(const [m,g] of Object.entries(G)){let L=0,n=0;for(let i=0;i<4000;i++){const q=g();if(q.type!=='mc'||q.keepOrder)continue;n++;const a=strip(q.answer);if(q.options.every(o=>o===q.answer||strip(o)<a))L++}console.log(m.padEnd(8),'right answer longest',(L/n*100).toFixed(0)+'%','of',n)}

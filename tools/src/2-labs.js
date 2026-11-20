@@ -41,7 +41,7 @@ const PHLab={el:null,onEvent:null,pH:7,ind:'uni',picked:null,seen:new Set(),
  mount(host,cfg){this.pH=cfg.pH0!=null?cfg.pH0:7;this.ind=cfg.ind||'uni';this.picked=null;this.seen=new Set([Math.round(this.pH*10)/10]);
   host.innerHTML=`<div class="lab"><div class="ctrls"><label class="slider"><span>pH</span><input type="range" id="phR" min="0" max="14" step="0.1" value="${this.pH}" aria-label="pH"><output id="phO">${this.pH.toFixed(2)}</output></label></div>
   <div class="ctrls"><select id="phPick" class="chip" aria-label="Pick a solution"><option value="">🧴 Pick a solution…</option>${HOUSE.map((h,i)=>`<option value="${i}">${h[2]} ${h[0]}</option>`).join('')}</select>
-  <span class="seg" role="group" aria-label="Indicator">${[['litmus','Litmus'],['phth','Phenolphthalein'],['uni','Universal']].map(([k,t])=>`<button type="button" data-ind="${k}" aria-pressed="${k===this.ind}">${t}</button>`).join('')}</span></div>
+  <span class="seg" role="group" aria-label="Indicator">${[['litmus','Litmus'],['phth','Phenolphthalein'],['uni','Universal'],['cab','Red cabbage']].map(([k,t])=>`<button type="button" data-ind="${k}" aria-pressed="${k===this.ind}">${t}</button>`).join('')}</span></div>
   <div class="phwrap"><svg viewBox="0 0 280 220" class="phsvg" role="img" aria-label="Beaker with indicator"><path d="M30 20v175a12 12 0 0 0 12 12h196a12 12 0 0 0 12-12V20" fill="none" stroke="#8a9aa6" stroke-width="5"/>
    <rect id="phLiq" x="33" y="60" width="214" height="144" rx="8" fill="#5db85a" opacity=".75"/>
    ${PHDOTS.map(([x,y],i)=>`<g id="phd${i}"><circle cx="${x+20}" cy="${y+20}" r="8" fill="#fff" stroke="#22313b" stroke-width="1.5"/><text x="${x+20}" y="${y+24}" font-size="10" font-weight="800" text-anchor="middle"></text></g>`).join('')}
@@ -59,6 +59,7 @@ const PHLab={el:null,onEvent:null,pH:7,ind:'uni',picked:null,seen:new Set(),
   const a=acidity(p);const st=el.querySelector('#phStat');st.className='status '+(a==='acidic'?'l':a==='basic'?'r':'eq');set('phStat',(a==='acidic'?'🍋 Acidic: [H⁺] > [OH⁻]':a==='basic'?'🧼 Basic: [OH⁻] > [H⁺]':'⚖️ Neutral: [H⁺] = [OH⁻]')+(this.picked?' · '+this.picked:''));
   const liq=el.querySelector('#phLiq'),strip=el.querySelector('#phStrip');
   if(this.ind==='uni'){liq.setAttribute('fill',universal(p));liq.setAttribute('opacity','.8');strip.style.display='none';set('phInd','Universal indicator: color changes all along the scale')}
+  else if(this.ind==='cab'){liq.setAttribute('fill',cabbage(p));liq.setAttribute('opacity','.85');strip.style.display='none';set('phInd','Red cabbage juice: '+cabName(p))}
   else if(this.ind==='phth'){const c=phth(p);liq.setAttribute('fill',c[1]);liq.setAttribute('opacity',c[0]==='colorless'?'.5':'.85');strip.style.display='none';set('phInd','Phenolphthalein: '+c[2])}
   else{const c=litmus(p);liq.setAttribute('fill','#eaf5fd');liq.setAttribute('opacity','.8');strip.style.display='';el.querySelector('#phStripC').setAttribute('fill',c[1]);set('phInd','Litmus paper: '+c[2])}
   const nH=Math.round(Math.max(0,Math.min(16,8+(7-p)*8/7))),nO=Math.round(Math.max(0,Math.min(16,8+(p-7)*8/7)));
@@ -79,9 +80,10 @@ const TitLab={el:null,onEvent:null,cfg:null,Vb:0,hist:[],endV:null,over:false,fl
    <path d="M103 186h40v14l38 40H65l38-40z" fill="none" stroke="#8a9aa6" stroke-width="3.5" stroke-linejoin="round"/><path id="tfLiq" d="M100 212h46l28 26H72z" fill="#f4f8fb" stroke="none" style="transition:fill .35s"/></svg>
    <div class="titread"><div class="cn"><small>Buret reading</small><b id="tRead">0.00 mL</b></div><div class="cn"><small>pH meter</small><b id="tpH"></b></div>
    <div class="kline">In the flask (mmol):</div><div class="bars"><span>Acid H⁺ left</span><i><u id="barH"></u></i><b id="nH"></b><span>OH⁻ added</span><i><u id="barO"></u></i><b id="nO"></b></div>
-   <div class="status" id="tStat" role="status" aria-live="polite">Colorless: still acidic. Start adding base.</div></div></div>
+   <div class="status" id="tStat" role="status" aria-live="polite">Colorless: still acidic. Start adding base.</div>
+   <div class="tpartbox"><div class="kline">🔍 Zoomed into the flask:</div><svg class="tpart" id="tPart" viewBox="0 0 240 118" role="img"></svg><div class="kline" id="tPartTxt"></div></div></div></div>
   <div class="graphwrap"><canvas id="tCv" width="600" height="190" role="img" aria-label="pH versus mL of base added"></canvas><p class="cap">Titration curve: pH (up) vs. mL of ${cfg.baseF} added. Pink band = where phenolphthalein turns pink.</p></div></div>`;
-  this.el=host;host.querySelectorAll('[data-add]').forEach(b=>fastTap(b,()=>this.add(Number(b.dataset.add))));host.querySelector('[data-refill]').onclick=()=>this.refill();this.show()},
+  this.el=host;host.querySelectorAll('[data-add]').forEach(b=>fastTap(b,()=>this.add(Number(b.dataset.add))));host.querySelector('[data-refill]').onclick=()=>this.refill();this.partInit();this.show()},
  add(v){if(this.endV!=null||this.over)return;if(this.Vb+v>50.0001){this.say('The buret only holds 50 mL. Tap ↺ Refill.');return}
   const prev=this.Vb;this.Vb=Math.round((this.Vb+v)*100)/100;const p=this.pHat(this.Vb);this.hist.push([this.Vb,p]);
   const d=this.el.querySelector('#tbDrop');d.setAttribute('opacity','1');setTimeout(()=>d.setAttribute('opacity','0'),180);
@@ -90,16 +92,16 @@ const TitLab={el:null,onEvent:null,cfg:null,Vb:0,hist:[],endV:null,over:false,fl
   if(c[0]==='pink'){this.over=true;this.show();this.say('😬 Dark pink: you passed the endpoint. Tap ↺ Refill and add drops near the end.');this.lock(true);labFire(this,'over');return}
   this.show();const left=this.Veq()-this.Vb;
   if(left<1.0){const f=this.el.querySelector('#tfLiq');f.style.fill='#f7b6d6';clearTimeout(this.flashT);this.flashT=setTimeout(()=>{f.style.fill=''},450);this.say('A pink swirl appears, then fades. You are close: use drops now!')}
-  else this.say(prev===0?'Colorless: the OH⁻ is being used up by H⁺ (neutralization).':'Still colorless: H⁺ + OH⁻ → H₂O keeps using up the base.');labFire(this,'add')},
+  else{const rx=this.cfg.Ka?'HA + OH⁻ → A⁻ + H₂O':'H⁺ + OH⁻ → H₂O';this.say(prev===0?`Colorless: the OH⁻ is being used up (${rx}).`:`Still colorless: ${rx} keeps using up the base.`)}labFire(this,'add')},
  lock(on){this.el.querySelectorAll('[data-add]').forEach(b=>b.disabled=on)},
- refill(){this.Vb=0;this.endV=null;this.over=false;this.hist=[[0,this.pHat(0)]];this.lock(false);this.show();this.say('Refilled. Colorless: still acidic. Start adding base.');labFire(this,'refill')},
+ refill(){this.Vb=0;this.endV=null;this.over=false;this.hist=[[0,this.pHat(0)]];this.lock(false);this.partInit();this.show();this.say('Refilled. Colorless: still acidic. Start adding base.');labFire(this,'refill')},
  say(t){const e=this.el.querySelector('#tStat');e.textContent=t;e.className='status '+(this.over?'l':this.endV!=null?'eq':'r')},
  show(){const el=this.el,c=this.cfg,p=this.pHat(this.Vb);el.querySelector('#tRead').textContent=this.Vb.toFixed(2)+' mL';el.querySelector('#tpH').textContent=p.toFixed(2);
   el.querySelector('#tbLiq').setAttribute('y',8+this.Vb*2.92);el.querySelector('#tbLiq').setAttribute('height',Math.max(0,146-this.Vb*2.92));
   const col=phth(p);el.querySelector('#tfLiq').setAttribute('fill',col[0]==='colorless'?'#d6e8f6':col[1]);
   const nA=c.r*c.Ca*c.Va,nB=c.Cb*this.Vb*c.m,mx=Math.max(nA,nB,1e-9)*1.05;
   const hLeft=Math.max(0,nA-nB);el.querySelector('#barH').style.width=(hLeft/mx*100)+'%';el.querySelector('#barO').style.width=(nB/mx*100)+'%';
-  el.querySelector('#nH').textContent=hLeft.toFixed(2);el.querySelector('#nO').textContent=nB.toFixed(2);this.graph()},
+  el.querySelector('#nH').textContent=hLeft.toFixed(2);el.querySelector('#nO').textContent=nB.toFixed(2);this.graph();this.partUpdate()},
  graph(){const cv=this.el.querySelector('#tCv'),w=600,h=190,ctx=fitCanvas(cv,w,h),X0=36,Y0=170,xm=Math.min(50,Math.max(10,Math.ceil(this.Veq()*1.5/5)*5)),sx=(w-50)/xm,sy=150/14;
   ctx.clearRect(0,0,w,h);ctx.fillStyle='#fde3ef';ctx.fillRect(X0,Y0-10.4*sy,w-50,(10.4-8.2)*sy);ctx.strokeStyle='#c9d4dd';ctx.lineWidth=1;ctx.font='11px Inter,system-ui,sans-serif';ctx.fillStyle='#5c6a75';
   for(let y=0;y<=14;y+=7){ctx.beginPath();ctx.moveTo(X0,Y0-y*sy);ctx.lineTo(w-14,Y0-y*sy);ctx.stroke();ctx.fillText(y,X0-20,Y0-y*sy+4)}
@@ -147,4 +149,26 @@ const SPEEDS=[[1,'▶ Normal speed'],[0.3,'🐢 Slow motion'],[0,'⏸ Paused']];
 const SPEED={i:typeof matchMedia!=='undefined'&&matchMedia('(prefers-reduced-motion: reduce)').matches?1:0,f(){return SPEEDS[this.i][0]}};
 const speedChip=()=>`<button type="button" class="chip spd" data-speed aria-label="Animation speed: ${SPEEDS[SPEED.i][1].slice(2)}. Tap to change.">${SPEEDS[SPEED.i][1]}</button>`;
 function wireSpeed(el){el.querySelectorAll('[data-speed]').forEach(b=>b.onclick=()=>{SPEED.i=(SPEED.i+1)%SPEEDS.length;el.querySelectorAll('[data-speed]').forEach(x=>{x.textContent=SPEEDS[SPEED.i][1];x.setAttribute('aria-label',`Animation speed: ${SPEEDS[SPEED.i][1].slice(2)}. Tap to change.`)})})}
+
+/* titration particle view: 12 acid particles (H⁺ for strong acids, HA for weak acids); each portion of OH⁻ drops in,
+   meets one, and becomes H₂O (weak acid: HA becomes A⁻ + H₂O). Extra OH⁻ after the endpoint stays as blue dots. */
+Object.assign(TitLab,{
+ partPos(i){return [22+(i%6)*39,26+Math.floor(i/6)*36]},
+ partInit(){const sv=this.el.querySelector('#tPart'),weak=!!this.cfg.Ka,P=[];
+  for(let i=0;i<12;i++){const [x,y]=this.partPos(i);P.push(`<g class="tpA" id="tpa${i}" style="transform:translate(${x}px,${y}px)"><circle r="13" fill="${weak?'#bfe6c8':'#f9c4bf'}" stroke="${weak?'#4b7a58':'#e0675a'}" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="${weak?11:13}" font-weight="900">${weak?'HA':'H⁺'}</text></g>`)}
+  for(let i=0;i<12;i++){const x=22+(i%6)*39,y=100;P.push(`<g class="tpO" id="tpo${i}" style="display:none;transform:translate(${x}px,${y}px)"><circle r="11" fill="#c9dcf7" stroke="#2f6fbf" stroke-width="2"/><text y="4" text-anchor="middle" font-size="10" font-weight="900">OH⁻</text></g>`)}
+  sv.innerHTML=P.join('')+'<g id="tpFx"></g>';this.partN=12;this.partOH=0;this.partUpdate(true)},
+ partUpdate(quiet){const c=this.cfg,sv=this.el&&this.el.querySelector('#tPart');if(!sv||!sv.querySelector('#tpa0'))return;const nA=c.r*c.Ca*c.Va,nB=c.Cb*this.Vb*c.m,weak=!!c.Ka;
+  const left=Math.round(12*Math.max(0,nA-nB)/nA),extra=Math.min(12,Math.round(12*Math.max(0,nB-nA)/nA)),reduce=quiet||matchMedia('(prefers-reduced-motion: reduce)').matches,fx=sv.querySelector('#tpFx');
+  const used=k=>{const g=sv.querySelector('#tpa'+k);if(weak){g.querySelector('circle').setAttribute('fill','#e3e7ea');g.querySelector('circle').setAttribute('stroke','#8a9aa6');g.querySelector('text').textContent='A⁻'}else g.style.display='none'};
+  const back=k=>{const g=sv.querySelector('#tpa'+k);g.style.display='';if(weak){g.querySelector('circle').setAttribute('fill','#bfe6c8');g.querySelector('circle').setAttribute('stroke','#4b7a58');g.querySelector('text').textContent='HA'}};
+  for(let k=0;k<12;k++){if(k<left)back(k)}
+  for(let k=left;k<this.partN;k++){if(reduce){used(k);continue}const [x,y]=this.partPos(k),d=document.createElementNS(svgNS,'g');
+   d.innerHTML='<circle r="11" fill="#c9dcf7" stroke="#2f6fbf" stroke-width="2"/><text y="4" text-anchor="middle" font-size="10" font-weight="900">OH⁻</text>';d.style.transform=`translate(${x}px,4px)`;d.style.transition='transform .5s ease-in';fx.appendChild(d);
+   requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.transform=`translate(${x}px,${y}px)`}));
+   setTimeout(()=>{used(k);d.innerHTML='<text y="5" text-anchor="middle" font-size="12" font-weight="900" fill="#2f6fbf">H₂O</text>';d.style.transition='opacity .7s';d.style.opacity='0'},520);setTimeout(()=>d.remove(),1400)}
+  for(let k=0;k<12;k++){const g=sv.querySelector('#tpo'+k);g.style.display=k<extra?'':'none'}
+  this.partN=left;this.partOH=extra;
+  const txt=`${weak?'🟢 HA (acid molecules)':'🔴 H⁺'} left: ${left} of 12 · ${extra?`🔵 extra OH⁻: ${extra}`:'no extra OH⁻'} · 💧 H₂O made: ${Math.min(nA,nB).toFixed(2)} mmol`;
+  this.el.querySelector('#tPartTxt').textContent=txt;sv.setAttribute('aria-label','Zoomed-in flask: '+txt)}});
 const LABS={beaker:Beaker,ph:PHLab,tit:TitLab,buf:BufLab};

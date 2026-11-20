@@ -53,10 +53,11 @@ function lbHTML(q){return `<div class="lb" id="lb">${q.rows.map((x,i)=>`<div cla
 function lbSync(q){$('lb').querySelectorAll('.lbrow').forEach((row,i)=>row.querySelectorAll('[data-r]').forEach(b=>b.setAttribute('aria-pressed',q.st[i]===b.dataset.r)))}
 function lbWire(q){$('lb').querySelectorAll('.lbrow').forEach((row,i)=>row.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{if(state.done)return;q.st[i]=b.dataset.r;row.classList.remove('bad','ok');lbSync(q)}))}
 function lbErrors(q){return q.rows.map((x,i)=>q.st[i]===x.want?null:[i,q.st[i]?`<b>${x.f}</b> is not the ${ROLE_LONG[q.st[i]]}. ${q.msg[x.want]}`:`Choose a role for <b>${x.f}</b> first.`]).filter(Boolean)}
-/* show the proton-transfer arrow, role tags and pair brackets on a Brønsted–Lowry picture */
-function blShow(){const g=document.querySelector('.blReveal');if(!g)return;g.style.opacity=1;const ball=g.querySelector('.blBall'),am=ball&&ball.querySelector('animateMotion');
- if(matchMedia('(prefers-reduced-motion: reduce)').matches||!am||!am.beginElement){const arc=document.getElementById('blArc');if(arc&&arc.getPointAtLength){const p=arc.getPointAtLength(arc.getTotalLength());ball.setAttribute('transform',`translate(${p.x},${p.y})`)}return}
- try{am.beginElement()}catch(e){}}
+/* show proton-transfer pictures: fade in, then run the H⁺ ball along its arrow (reduced motion: ball at the end) */
+function blShow(){document.querySelectorAll('.blReveal').forEach(g=>{if(g.dataset.shown)return;g.dataset.shown=1;g.style.opacity=1;const ball=g.querySelector('.blBall'),am=ball&&ball.querySelector('animateMotion'),mp=am&&am.querySelector('mpath'),arc=mp&&document.getElementById((mp.getAttribute('href')||'').slice(1));
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches||!am||!am.beginElement){if(arc&&arc.getPointAtLength){const p=arc.getPointAtLength(arc.getTotalLength());ball.setAttribute('transform',`translate(${p.x},${p.y})`)}return}
+ try{am.beginElement()}catch(e){}})}
+function showAfter(q){if(!q.after)return;$('fb').insertAdjacentHTML('beforeend',`<div class="afterpic">${q.after}</div>`);blShow()}
 function next(){stopLabs();state.lab=null;
  $('practice').classList.toggle('quizmode',state.mode==='quiz');$('practice').classList.remove('quizdone');$('newBtn').textContent='New Question ↻';
  if(state.mode==='quiz'){if(!state.quiz||state.quiz.over)startQuiz();else if(state.done&&state.q&&state.q.qi===state.quiz.i)state.quiz.i++;
@@ -91,9 +92,9 @@ function finish(revealed,quizWrong){state.done=true;['checkBtn','hintBtn','showB
  if(q.type==='label'){blShow();$('lb').classList.add('locked');if(revealed||quizWrong){q.rows.forEach((x,i)=>q.st[i]=x.want);lbSync(q)}$('lb').querySelectorAll('.lbrow').forEach(r=>{r.classList.remove('bad');r.classList.add('ok')})}
  const ansTxt=ansText(q),more=q.type==='mc'?whyList(q):'';
  $('qArea').querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(q.options[+b.dataset.i]===q.answer)b.classList.add('right')});
- if(quizWrong){state.streak=0;log(false);stats();fb('bad',`❌ Not this time. The answer is <b>${ansTxt}</b>.<br>${q.why}${more}`);return}
+ if(quizWrong){state.streak=0;log(false);stats();fb('bad',`❌ Not this time. The answer is <b>${ansTxt}</b>.<br>${q.why}${more}`);showAfter(q);return}
  if(revealed){state.assist++;state.streak=0;log(false);fb('good',`👀 <b>${ansTxt}</b><br>${q.why}${more}<br><small>Assisted: no point this time. <button class="linkbtn" onclick="openVideo()">🎥 Review with Dr. Dan</button></small>`);award(true)}
- else{state.correct++;state.streak++;log(true);confetti();fb('good','✅ Correct! '+q.why+more);award(false)}stats();
+ else{state.correct++;state.streak++;log(true);confetti();fb('good','✅ Correct! '+q.why+more);award(false)}stats();showAfter(q);
  const a=document.activeElement;if(!a||a===document.body||a.disabled)$('newBtn').focus({preventScroll:true})}
 function checkNum(q){const raw=$('numIn').value.trim();if(!raw)return fb('bad','Type your answer first.');
  if(NUM.decimalComma(raw))return fb('bad','Use a period for decimals (type 1.5, not 1,5). Commas only for thousands, like 1,200.');
@@ -137,7 +138,9 @@ document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return
 /* disabled buttons: stop iOS double-tap zoom */
 document.addEventListener('touchend',e=>{const b=e.target.closest&&e.target.closest('button');if(b&&b.disabled)e.preventDefault()},{passive:false});
 /* Deep links: ?mode=id|ph|calc|pairs|titrate|buffer|quiz opens that mode for this visit only (for textbook Explore It boxes). */
-(()=>{const m=new URLSearchParams(location.search).get('mode');if(MODES.some(x=>x.id===m)){state.mode=m;addEventListener('load',()=>setTimeout(()=>{const e=$('modes');if(e)scrollTo(0,e.getBoundingClientRect().top+scrollY-8)},150))}})();
+/* ?prelab=12a: the pH Lab shows only EXP 12a pre-lab items (red cabbage, mass → pH, excess reactant) */
+var PRELAB=new URLSearchParams(location.search).get('prelab')==='12a';if(PRELAB)state.mode='ph';
+(()=>{const m=new URLSearchParams(location.search).get('mode');if(PRELAB||MODES.some(x=>x.id===m)){state.mode=PRELAB?'ph':m;addEventListener('load',()=>setTimeout(()=>{const e=$('modes');if(e)scrollTo(0,e.getBoundingClientRect().top+scrollY-8)},150))}})();
 /* The shared Feedback pill is fixed bottom-right; on phones it covered Show Answer. Hide it while the answer buttons are on screen. */
 (()=>{const row=document.querySelector('.btnrow');if(!row||!('IntersectionObserver' in window))return;let vis=false;const apply=()=>{const f=document.querySelector('.ddfb-float');if(f)f.classList.toggle('eq-hide',vis)};
  new IntersectionObserver(es=>{vis=es[0].isIntersecting;apply()}).observe(row);new MutationObserver(apply).observe(document.body,{childList:true})})();

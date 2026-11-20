@@ -157,6 +157,11 @@ function universal(pH){const C=[[0,'#d93b3b'],[2,'#ee6a3a'],[4,'#f4a53b'],[5.5,'
  let i=0;while(i<C.length-2&&pH>C[i+1][0])i++;const [a,ca]=C[i],[b,cb]=C[i+1],t=Math.max(0,Math.min(1,(pH-a)/(b-a)));
  const mix=(x,y)=>Math.round(parseInt(x,16)+(parseInt(y,16)-parseInt(x,16))*t).toString(16).padStart(2,'0');
  return '#'+mix(ca.slice(1,3),cb.slice(1,3))+mix(ca.slice(3,5),cb.slice(3,5))+mix(ca.slice(5,7),cb.slice(5,7))}
+/* red cabbage (anthocyanin) indicator, EXP 12a: red → pink → purple → violet → blue → green → yellow */
+function cabbage(pH){const C=[[1,'#c8173a'],[3,'#e0457b'],[5.5,'#9b4a9f'],[7,'#6a55c2'],[8.5,'#3f72d0'],[10.5,'#2e9e8a'],[12,'#6fbf3f'],[14,'#e3cf33']];
+ let i=0;while(i<C.length-2&&pH>C[i+1][0])i++;const [a,ca]=C[i],[b,cb]=C[i+1],t=Math.max(0,Math.min(1,(pH-a)/(b-a)));
+ const mix=(x,y)=>Math.round(parseInt(x,16)+(parseInt(y,16)-parseInt(x,16))*t).toString(16).padStart(2,'0');
+ return '#'+mix(ca.slice(1,3),cb.slice(1,3))+mix(ca.slice(3,5),cb.slice(3,5))+mix(ca.slice(5,7),cb.slice(5,7))}
 const acidity=pH=>Math.abs(pH-7)<0.005?'neutral':pH<7?'acidic':'basic';
 /* [H⁺] from charge balance, by bisection on log[H⁺]:
    h + pos/V − CT/V · Ka/(Ka+h) − Kw/h = 0

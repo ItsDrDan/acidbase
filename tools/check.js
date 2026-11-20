@@ -8,13 +8,13 @@ const fs=require('fs'),path=require('path'),S=path.join(__dirname,'src');
 global.window={};global.matchMedia=undefined;
 const cp=path.join(__dirname,'..','..','games','brand','chemparse.v2.js');if(fs.existsSync(cp)){(0,eval)(fs.readFileSync(cp,'utf8'))}
 global.state={quiz:{plan:[],i:0}};
-const src=['1-data.js','2-labs.js','3-questions.js'].map(f=>fs.readFileSync(path.join(S,f),'utf8')).join('\n;\n');
+const src=['1-data.js','2-labs.js','3-questions.js','3b-more.js'].map(f=>fs.readFileSync(path.join(S,f),'utf8')).join('\n;\n');
 (0,eval)(src.replace(/^const (\w+)=/gm,'var $1=').replace(/^function (\w+)/gm,'var $1=globalThis.$1=function $1'));
 let fails=0,n=0;const bad=m=>{n++;if(fails++<40)console.log('FAIL',m)},ok=(c,m)=>{n++;if(!c)bad(m)};
 const txt=q=>[q.prompt,q.html,q.why,q.hint,...(q.options||[]),...Object.values(q.whys||{})].join(' ');
 console.log('chemparse:',window.ChemParse?'shared v2':'local fallback');
 /* 1) generators */
-const gens={ionConc:ionConcQ,defs:defsQ,massTit:massTitQ,id:idQ,ph:phQ,calc:calcModeQ,pairs:pairsQ,titrate:titrateQ,buffer:bufferQ,classify:classifyQ,family:familyQ,strong:strongPickQ,beaker:beakerQ,phColor:phColorQ,pOHLab:pOHLabQ,ratio:ratioLabQ,pink:pinkLabQ,conc:concClassQ,label:labelQ,conj:conjQ,arr:arrEqQ,pairPick:pairPickQ,titLab:titLabQ,titCalc:titCalcQ,neut:neutQ,metal:metalQ,bufCmp:bufCompareQ,bufPart:bufPartQ,bufCap:bufCapQ,isBuf:isBufferQ,blood:bloodCalcQ};
+const gens={abg:abgQ,cases:caseQ,stomach:stomachBloodQ,cabColor:cabbageColorQ,cabMatch:cabbageMatchQ,massPH:massPHQ,excessPH:excessPHQ,citric:citricQ,prelab:prelabQ,ionConc:ionConcQ,defs:defsQ,massTit:massTitQ,id:idQ,ph:phQ,calc:calcModeQ,pairs:pairsQ,titrate:titrateQ,buffer:bufferQ,classify:classifyQ,family:familyQ,strong:strongPickQ,beaker:beakerQ,phColor:phColorQ,pOHLab:pOHLabQ,ratio:ratioLabQ,pink:pinkLabQ,conc:concClassQ,label:labelQ,conj:conjQ,arr:arrEqQ,pairPick:pairPickQ,titLab:titLabQ,titCalc:titCalcQ,neut:neutQ,metal:metalQ,bufCmp:bufCompareQ,bufPart:bufPartQ,bufCap:bufCapQ,isBuf:isBufferQ,blood:bloodCalcQ};
 Object.keys(TOPICS).forEach(t=>gens['quiz:'+t]=()=>topicQ(t));
 for(const [k,g] of Object.entries(gens))for(let i=0;i<2500;i++){let q;try{q=g()}catch(e){bad(k+' throws '+e.stack.split('\n').slice(0,2).join(' '));break}
  ok(q.prompt&&q.hint&&(q.why||q.mkWhy),k+': missing prompt/hint/why');ok(!q.video||VIDEO_FOR[q.video],k+': unknown video '+q.video);
@@ -50,6 +50,11 @@ LADDERS.forEach(L=>{for(let i=0;i+1<L.length;i++){ok(L[i][1]-L[i+1][1]===1,'ladd
 const chOf=f=>{const m=f.match(/([²³]?)([⁺⁻])$/);return m?(m[1]==='²'?2:m[1]==='³'?3:1)*(m[2]==='⁺'?1:-1):0},bodyOf=f=>f.replace(/[²³]?[⁺⁻]$/,'');
 BL_RX.forEach(rx=>{const h=s=>hCount(bodyOf(s)),A=rx.find(x=>x[1]==='A')[0],B=rx.find(x=>x[1]==='B')[0],CA=rx.find(x=>x[1]==='CA')[0],CB=rx.find(x=>x[1]==='CB')[0];
  ok(h(A)-h(CB)===1&&chOf(A)-chOf(CB)===1,'BL acid→conj base '+A+'→'+CB);ok(h(CA)-h(B)===1&&chOf(CA)-chOf(B)===1,'BL base→conj acid '+B+'→'+CA)});
+/* v1.3 spot checks: lab manual post-lab 2a/2b/2c (1.82 g HCl, 4.56 g Sr(OH)2) and cabbage colors */
+{const nH=1.82/36.46,nOH=2*4.56/121.64;near(-Math.log10(nH/0.500),1.000,0.002,'EXP 12a 2a HCl pH');near(14+Math.log10(nOH/0.500),13.177,0.002,'EXP 12a 2b Sr(OH)2 pH');
+ near(14+Math.log10((nOH-nH)/0.700),12.5,0.2,'EXP 12a 2c excess base pH');ok(cabName(1.5)==='Red'&&cabName(7)==='Violet'&&cabName(8.3)==='Blue'&&cabName(13)==='Yellow','cabbage names')}
+for(let i=0;i<3000;i++){const q=GEN.calc();if(q.kind==='log'){ok(q.answer>0&&q.answer<14.5,'calc pH range '+q.answer+' '+q.prompt.slice(0,60))}}
+for(const g of [conjQ,arrEqQ,bufPartQ,bufBloodQ])for(let i=0;i<300;i++){const q=g();if(g!==arrEqQ||/Arrhenius acid/.test(q.prompt))ok(q.after&&/blReveal/.test(q.after)&&!/undefined/.test(q.after),'after picture '+q.prompt.slice(0,50))}
 /* 4) titration lab */
 let overs=0,runs=0;
 for(const [af,r,Ka] of TIT_ACIDS)for(let i=0;i<400;i++){const nn=titNums(r),c={acidF:af,baseF:'NaOH',r,m:1,Ka,Ca:nn.Ca,Va:nn.Va,Cb:nn.Cb};TitLab.cfg=c;const Veq=TitLab.Veq();

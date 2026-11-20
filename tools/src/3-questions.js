@@ -134,7 +134,7 @@ function calcModeQ(){return Math.random()<0.12?bloodCalcQ():calcQ()}
 /* Brønsted–Lowry picture: the reaction drawn in SVG. After the answer, a curved arrow labeled H⁺ shows the proton
    moving from the acid to the base (an H⁺ ball travels along it), role tags appear under each species, and brackets
    join each conjugate pair (acid ↔ conjugate base in coral, base ↔ conjugate acid in blue). */
-const BL_X=[80,240,420,580],BL_COL={A:'#d9534f',CB:'#d9534f',B:'#2f7fbf',CA:'#2f7fbf'};
+const BL_X=[80,240,420,580],BL_COL={A:'#c0392b',CB:'#c0392b',B:'#1f6aa5',CA:'#1f6aa5'};
 function blDiagram(rx){const X=BL_X,ix=r=>rx.findIndex(x=>x[1]===r),a=ix('A'),b=ix('B'),ca=ix('CA'),cb=ix('CB');
  const txt=(x,y,t,o='')=>`<text x="${x}" y="${y}" text-anchor="middle" ${o}>${t}</text>`;
  const arc=`M${X[a]},74 C${X[a]},22 ${X[b]},22 ${X[b]},74`;
