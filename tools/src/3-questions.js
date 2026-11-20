@@ -131,10 +131,32 @@ function bloodCalcQ(){const p=pick([7.20,7.25,7.30,7.32,7.48,7.50,7.55,7.60,7.38
 function calcModeQ(){return Math.random()<0.12?bloodCalcQ():calcQ()}
 
 /* ---------- 🔄 Proton Pairs ---------- */
+/* Brønsted–Lowry picture: the reaction drawn in SVG. After the answer, a curved arrow labeled H⁺ shows the proton
+   moving from the acid to the base (an H⁺ ball travels along it), role tags appear under each species, and brackets
+   join each conjugate pair (acid ↔ conjugate base in coral, base ↔ conjugate acid in blue). */
+const BL_X=[80,240,420,580],BL_COL={A:'#d9534f',CB:'#d9534f',B:'#2f7fbf',CA:'#2f7fbf'};
+function blDiagram(rx){const X=BL_X,ix=r=>rx.findIndex(x=>x[1]===r),a=ix('A'),b=ix('B'),ca=ix('CA'),cb=ix('CB');
+ const txt=(x,y,t,o='')=>`<text x="${x}" y="${y}" text-anchor="middle" ${o}>${t}</text>`;
+ const arc=`M${X[a]},74 C${X[a]},22 ${X[b]},22 ${X[b]},74`;
+ /* bracket lines first, then labels on top; each label slides along its line away from the other bracket's verticals */
+ const P=[[a,cb,170,BL_COL.A,'conjugate pair 1'],[b,ca,200,BL_COL.B,'conjugate pair 2']];
+ const line=([i,j,d,c])=>`<path d="M${X[i]},144 V${d} H${X[j]} V144" fill="none" stroke="${c}" stroke-width="3" stroke-linejoin="round"/>`;
+ const lab=([i,j,d,c,t],k)=>{const o=P[1-k],avoid=[X[o[0]],X[o[1]]],lo=Math.min(X[i],X[j])+72,hi=Math.max(X[i],X[j])-72;let best=(X[i]+X[j])/2,bd=-1;
+  for(let x=lo;x<=hi;x+=5){const dd=Math.min(...avoid.map(v=>Math.abs(v-x)));if(dd>bd+0.5||(Math.abs(dd-bd)<=0.5&&Math.abs(x-(X[i]+X[j])/2)<Math.abs(best-(X[i]+X[j])/2))){bd=dd;best=x}}
+  return `<rect x="${best-70}" y="${d-12}" width="140" height="24" rx="12" fill="#fff" stroke="${c}" stroke-width="1.5"/>`+txt(best,d+5,t,`font-size="15.5" font-weight="800" fill="${c}"`)};
+ const alt=`${rx[0][0]} + ${rx[1][0]} ⇌ ${rx[2][0]} + ${rx[3][0]}`;
+ return `<svg class="blsvg" viewBox="0 0 660 214" role="img" aria-label="${esc(alt)}"><defs><marker id="blHead" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e0675a"/></marker></defs>
+ <g font-family="Inter,system-ui,sans-serif" font-weight="900" font-size="27" fill="#22313b">${txt(X[0],108,rx[0][0])}${txt(160,108,'+')}${txt(X[1],108,rx[1][0])}${txt(330,108,'⇌')}${txt(X[2],108,rx[2][0])}${txt(500,108,'+')}${txt(X[3],108,rx[3][0])}</g>
+ <g class="blReveal" aria-hidden="true" style="opacity:0;transition:opacity .4s">
+  <path id="blArc" d="${arc}" fill="none" stroke="#e0675a" stroke-width="3.5" stroke-dasharray="7 5" marker-end="url(#blHead)"/>
+  ${txt((X[a]+X[b])/2,20,'H⁺ moves',`font-size="17" font-weight="800" fill="#c0504a"`)}
+  <g class="blBall"><circle r="13" fill="#f9c4bf" stroke="#e0675a" stroke-width="2.5"/>${txt(0,5,'H⁺',`font-size="12" font-weight="900" fill="#22313b"`)}<animateMotion dur="1.4s" begin="indefinite" fill="freeze" rotate="0"><mpath href="#blArc"/></animateMotion></g>
+  <g font-family="Inter,system-ui,sans-serif">${rx.map(([s,r],i)=>txt(X[i],138,ROLE_NAME[r],`font-size="17" font-weight="800" fill="${BL_COL[r]}"`)).join('')}
+  ${P.map(line).join('')}${P.map(lab).join('')}</g></g></svg>`}
 function labelQ(rx){rx=rx||pickNew('bl',BL_RX);const f=r=>rx.find(x=>x[1]===r)[0],A=f('A'),B=f('B'),CA=f('CA'),CB=f('CB');
  const msg={A:`${A} gives away an H⁺ and becomes ${CB}: it is the <b>acid</b>.`,B:`${B} picks up the H⁺ and becomes ${CA}: it is the <b>base</b>.`,CA:`${CA} is ${B} with one extra H⁺ (it can give it back): the <b>conjugate acid</b>.`,CB:`${CB} is ${A} after losing one H⁺: the <b>conjugate base</b>.`};
  return {type:'label',topic:'conj',video:'conj',rows:rx.map(([s,r])=>({f:s,want:r})),st:rx.map(()=>null),msg,
-  prompt:'Label each species in this Brønsted–Lowry reaction.',html:`<div class="rxn">${rx[0][0]} + ${rx[1][0]} ⇌ ${rx[2][0]} + ${rx[3][0]}</div>`,
+  prompt:'Label each species in this Brønsted–Lowry reaction.',html:blDiagram(rx),
   hint:'Find the reactant that LOSES an H⁺ (the acid); what it becomes is its conjugate base. The other reactant GAINS the H⁺ (the base) and becomes the conjugate acid.',
   why:`Pair 1: ${A} (acid) / ${CB} (conjugate base). Pair 2: ${B} (base) / ${CA} (conjugate acid). Each pair differs by one H⁺.`}}
 function conjQ(){const L=pickNew('lad',LADDERS),wantBase=L.length===2?true:Math.random()<0.5;let i=wantBase?rnd(0,L.length-2):rnd(1,L.length-1);if(L.length===2)i=wantBase?0:1;

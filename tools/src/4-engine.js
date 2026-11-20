@@ -53,6 +53,10 @@ function lbHTML(q){return `<div class="lb" id="lb">${q.rows.map((x,i)=>`<div cla
 function lbSync(q){$('lb').querySelectorAll('.lbrow').forEach((row,i)=>row.querySelectorAll('[data-r]').forEach(b=>b.setAttribute('aria-pressed',q.st[i]===b.dataset.r)))}
 function lbWire(q){$('lb').querySelectorAll('.lbrow').forEach((row,i)=>row.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{if(state.done)return;q.st[i]=b.dataset.r;row.classList.remove('bad','ok');lbSync(q)}))}
 function lbErrors(q){return q.rows.map((x,i)=>q.st[i]===x.want?null:[i,q.st[i]?`<b>${x.f}</b> is not the ${ROLE_LONG[q.st[i]]}. ${q.msg[x.want]}`:`Choose a role for <b>${x.f}</b> first.`]).filter(Boolean)}
+/* show the proton-transfer arrow, role tags and pair brackets on a Brønsted–Lowry picture */
+function blShow(){const g=document.querySelector('.blReveal');if(!g)return;g.style.opacity=1;const ball=g.querySelector('.blBall'),am=ball&&ball.querySelector('animateMotion');
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches||!am||!am.beginElement){const arc=document.getElementById('blArc');if(arc&&arc.getPointAtLength){const p=arc.getPointAtLength(arc.getTotalLength());ball.setAttribute('transform',`translate(${p.x},${p.y})`)}return}
+ try{am.beginElement()}catch(e){}}
 function next(){stopLabs();state.lab=null;
  $('practice').classList.toggle('quizmode',state.mode==='quiz');$('practice').classList.remove('quizdone');$('newBtn').textContent='New Question ↻';
  if(state.mode==='quiz'){if(!state.quiz||state.quiz.over)startQuiz();else if(state.done&&state.q&&state.q.qi===state.quiz.i)state.quiz.i++;
@@ -84,7 +88,7 @@ function whyList(q){const others=q.options.filter(o=>o!==q.answer&&q.whys[o]);re
 function finish(revealed,quizWrong){state.done=true;['checkBtn','hintBtn','showBtn'].forEach(id=>$(id).disabled=true);const q=state.q;if($('numIn'))$('numIn').readOnly=true;
  if(state.mode==='quiz'&&state.quiz&&q.qi===state.quiz.i&&state.quiz.res.length===state.quiz.i)state.quiz.res.push({topic:q.topic,ok:!revealed&&!quizWrong});
  if(state.mode==='quiz'){const last=state.quiz.i+1>=state.quiz.plan.length;$('newBtn').textContent=last?'See my results →':'Next question →'}
- if(q.type==='label'){$('lb').classList.add('locked');if(revealed||quizWrong){q.rows.forEach((x,i)=>q.st[i]=x.want);lbSync(q)}$('lb').querySelectorAll('.lbrow').forEach(r=>{r.classList.remove('bad');r.classList.add('ok')})}
+ if(q.type==='label'){blShow();$('lb').classList.add('locked');if(revealed||quizWrong){q.rows.forEach((x,i)=>q.st[i]=x.want);lbSync(q)}$('lb').querySelectorAll('.lbrow').forEach(r=>{r.classList.remove('bad');r.classList.add('ok')})}
  const ansTxt=ansText(q),more=q.type==='mc'?whyList(q):'';
  $('qArea').querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(q.options[+b.dataset.i]===q.answer)b.classList.add('right')});
  if(quizWrong){state.streak=0;log(false);stats();fb('bad',`❌ Not this time. The answer is <b>${ansTxt}</b>.<br>${q.why}${more}`);return}
